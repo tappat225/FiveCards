@@ -12,14 +12,30 @@
             <h2>用户列表</h2>
             <ul id="playersList"></ul>
         </div>
-        <div class="room-list">
-            <h2>房间列表</h2>
-            <!-- 示例房间列表 -->
-            <ul>
-                <li>Room 1 - 2/4 players</li>
-                <li>Room 2 - 1/4 players</li>
-                <!-- 更多房间 -->
-            </ul>
+        <div class="room-section">
+            <div class="room-list">
+                <h2>房间列表</h2>
+                <!-- 示例房间列表 -->
+                <ul>
+                    <li>Room 1 - 2/4 players</li>
+                    <li>Room 2 - 1/4 players</li>
+                    <!-- 更多房间 -->
+                </ul>
+            </div>
+            <!-- 创建房间表单 -->
+            <div class="create-room">
+                <h2>创建房间</h2>
+                <form id="createRoomForm">
+                    <input type="text" id="roomName" placeholder="房间名称" required>
+                    <select id="maxPlayers">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <button type="submit">创建房间</button>
+                </form>
+            </div>
         </div>
         <div class="user-info">
             <h3>用户信息</h3>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏房间</title>
+    <link rel="stylesheet" href="room.css">
+</head>
+<body>
+    <div class="room-container">
+        <div class="room-info">
+            <h2 id="roomName">房间名: </h2>
+            <p id="maxPlayers">最大游戏人数: </p>
+            <button id="dissolveRoom" style="display: none;">解散该房间</button>
+        </div>
+        <div class="player-list">
+            <h3>玩家列表</h3>
+            <ul id="playersInRoom"></ul>
+        </div>
+        <div class="game-actions">
+            <button id="readyButton">准备</button>
+        </div>
+    </div>
+
+    <script src="room.js"></script>
+</body>
+</html>
