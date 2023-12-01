@@ -3,24 +3,11 @@ window.onload = function() {
     const username = urlParams.get('username');
     document.getElementById('usernameDisplay').textContent = username;
 
-    fetch('http://localhost:3001/players')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.message === "success") {
-            const playersList = document.getElementById('playersList');
-            data.data.forEach(player => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${player.name} - Score: ${player.score}, Rank: ${player.rank}`;
-                playersList.appendChild(listItem);
-            });
-        }
-    })
-    .catch(error => console.error('Error:', error));
+    // 获取并显示用户列表
+    fetchPlayers();
+
+    // 获取并显示房间列表
+    fetchRooms();
 
     // 处理创建房间表单提交
     document.getElementById('createRoomForm').addEventListener('submit', function(event) {
@@ -39,32 +26,57 @@ window.onload = function() {
         .then(response => response.json())
         .then(data => {
             if (data.message === "success") {
+                // 更新房间列表
+                fetchRooms();
                 // 跳转到房间页面
-                window.location.href = `/room.html?roomId=${data.roomId}`;
+                window.location.href = `room.html?roomId=${data.roomId}`;
             }
         })
         .catch(error => console.error('Error:', error));
     });
 
-    // 假设您已经从服务器获取了房间列表
-    const rooms = [
-        { id: 1, name: "Room 1", players: 2, maxPlayers: 4 },
-        { id: 2, name: "Room 2", players: 1, maxPlayers: 4 }
-        // ... 更多房间
-    ];
-
-    const roomsList = document.querySelector('.room-list ul');
-    rooms.forEach(room => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${room.name} - ${room.players}/${room.maxPlayers} players`;
-        const joinButton = document.createElement('button');
-        joinButton.textContent = '加入';
-        joinButton.onclick = function() {
-            // 发送加入房间的请求到服务器
-            // 成功后跳转到房间页面
-            window.location.href = `/room.html?roomId=${room.id}`;
-        };
-        listItem.appendChild(joinButton);
-        roomsList.appendChild(listItem);
-    });
+    // 每隔一段时间刷新房间列表
+    setInterval(fetchRooms, 5000);
 };
+
+// 获取并显示用户列表
+function fetchPlayers() {
+    fetch('http://localhost:3001/players')
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "success") {
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = ''; // 清空现有列表
+            data.data.forEach(player => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${player.name} - Score: ${player.score}, Rank: ${player.rank}`;
+                playersList.appendChild(listItem);
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// 获取并显示房间列表
+function fetchRooms() {
+    fetch('http://localhost:3001/rooms')
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === "success") {
+            const roomsList = document.querySelector('.room-list ul');
+            roomsList.innerHTML = ''; // 清空现有列表
+            data.rooms.forEach(room => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${room.name} - ${room.players}/${room.maxPlayers} players`;
+                const joinButton = document.createElement('button');
+                joinButton.textContent = '加入';
+                joinButton.onclick = function() {
+                    window.location.href = `room.html?roomId=${room.id}`;
+                };
+                listItem.appendChild(joinButton);
+                roomsList.appendChild(listItem);
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}

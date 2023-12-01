@@ -106,21 +106,45 @@ app.post('/createRoom', (req, res) => {
         return;
       }
       res.json({
-        "message": "Room created",
+        "message": "success",
         "roomId": this.lastID
       });
+    });
+});
+
+// 获取房间列表
+app.get('/rooms', (req, res) => {
+    db.all("SELECT id, name, maxPlayers FROM rooms", [], (err, rows) => {
+        if (err) {
+            console.error("Database error:", err.message);
+            res.status(400).json({"error": err.message});
+            return;
+        }
+        // 这里您可能需要逻辑来计算每个房间的当前玩家数量
+        // 例如，通过查询与每个房间相关的玩家记录
+        res.json({
+            "message": "success",
+            "rooms": rows // 假设返回的数据包括房间ID、名称和最大玩家数量
+        });
     });
 });
 
 // 加入房间
 app.post('/joinRoom', (req, res) => {
     const { roomId, playerName } = req.body;
-    // 这里需要添加逻辑来处理加入房间的请求
-    // 例如，检查房间是否存在，是否已满等
-    // 然后更新数据库或返回相应的响应
-    res.json({
-        "message": "Player joined",
-        "roomId": roomId
+    // 检查房间是否存在及是否已满
+    db.get("SELECT id, maxPlayers FROM rooms WHERE id = ?", [roomId], (err, room) => {
+        if (err || !room) {
+            res.status(400).json({"error": "Room does not exist"});
+            return;
+        }
+        // 此处添加逻辑以确定房间是否已满
+        // 例如，查询与房间相关联的玩家数量
+        // 如果房间未满，更新数据库以将玩家添加到房间
+        res.json({
+            "message": "Player joined",
+            "roomId": roomId
+        });
     });
 });
 
