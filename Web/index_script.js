@@ -8,7 +8,7 @@ document.getElementById('username').addEventListener('keypress', function(event)
 function login() {
     var username = document.getElementById('username').value;
     if(username) {
-        fetch('/player', {
+        fetch('http://localhost:3001/player', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

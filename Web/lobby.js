@@ -3,7 +3,7 @@ window.onload = function() {
     const username = urlParams.get('username');
     document.getElementById('usernameDisplay').textContent = username;
 
-    fetch('/players')
+    fetch('http://localhost:3001/players')
       .then(response => response.json())
       .then(data => {
           if (data.message === "success") {

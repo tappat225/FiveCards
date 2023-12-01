@@ -1,12 +1,47 @@
-// server.js
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
-const port = 3000;
+const port = 3001;
+
+// 配置CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 app.use(express.json());
 
-const db = new sqlite3.Database('game.db');
+const db = new sqlite3.Database('game.db', (err) => {
+  if (err) {
+    console.error(err.message);
+  } else {
+    console.log('Connected to the game.db database.');
+    initializeDatabase();
+  }
+});
+
+function initializeDatabase() {
+  db.run("CREATE TABLE IF NOT EXISTS players (name TEXT)", (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+  });
+
+  db.run("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0", (err) => {
+    if (err) {
+      // Ignore error if column already exists
+      console.log('Score column already exists or cannot be added.');
+    }
+  });
+
+  db.run("ALTER TABLE players ADD COLUMN rank INTEGER", (err) => {
+    if (err) {
+      // Ignore error if column already exists
+      console.log('Rank column already exists or cannot be added.');
+    }
+  });
+}
 
 // 获取玩家列表
 app.get('/players', (req, res) => {
