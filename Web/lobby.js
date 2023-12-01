@@ -4,18 +4,23 @@ window.onload = function() {
     document.getElementById('usernameDisplay').textContent = username;
 
     fetch('http://localhost:3001/players')
-      .then(response => response.json())
-      .then(data => {
-          if (data.message === "success") {
-              const playersList = document.getElementById('playersList');
-              data.data.forEach(player => {
-                  const listItem = document.createElement('li');
-                  listItem.textContent = `${player.name} - Score: ${player.score}, Rank: ${player.rank}`;
-                  playersList.appendChild(listItem);
-              });
-          }
-      })
-      .catch(error => console.error('Error:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.message === "success") {
+            const playersList = document.getElementById('playersList');
+            data.data.forEach(player => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${player.name} - Score: ${player.score}, Rank: ${player.rank}`;
+                playersList.appendChild(listItem);
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
 
     // 处理创建房间表单提交
     document.getElementById('createRoomForm').addEventListener('submit', function(event) {

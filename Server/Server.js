@@ -21,32 +21,35 @@ const db = new sqlite3.Database('game.db', (err) => {
   }
 });
 
-function initializeDatabase() {
-    db.run("CREATE TABLE IF NOT EXISTS players (name TEXT)", (err) => {
-      if (err) {
-        console.error(err.message);
-      }
-    });
-
-    db.run("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0", (err) => {
-        if (err) {
-        // Ignore error if column already exists
-        console.log('Score column already exists or cannot be added.');
-        }
-    });
-
-    db.run("ALTER TABLE players ADD COLUMN rank INTEGER", (err) => {
-        if (err) {
-            // Ignore error if column already exists
-            console.log('Rank column already exists or cannot be added.');
-        }
-    });
-
-    // 创建房间表
-    db.run("CREATE TABLE IF NOT EXISTS rooms (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, maxPlayers INTEGER)", (err) => {
-        if (err) {
+function initializeDatabase(callback) {
+    db.serialize(() => {
+        db.run("CREATE TABLE IF NOT EXISTS players (name TEXT)", (err) => {
+          if (err) {
             console.error(err.message);
-        }
+            return;
+          }
+        });
+
+        db.run("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0", (err) => {
+            if (err) {
+                console.log('Score column already exists or cannot be added.');
+            }
+        });
+
+        db.run("ALTER TABLE players ADD COLUMN rank INTEGER", (err) => {
+            if (err) {
+                console.log('Rank column already exists or cannot be added.');
+            }
+        });
+
+        db.run("CREATE TABLE IF NOT EXISTS rooms (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, maxPlayers INTEGER)", (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+        }, () => {
+            // Callback is called after the last statement is completed
+            if (callback) callback();
+        });
     });
 }
 
@@ -54,6 +57,7 @@ function initializeDatabase() {
 app.get('/players', (req, res) => {
     db.all("SELECT name, score, rank FROM players ORDER BY score DESC, name", [], (err, rows) => {
     if (err) {
+        console.error("Database error:", err.message);
         res.status(400).json({"error": err.message});
         return;
     }
@@ -143,6 +147,9 @@ app.post('/playerReady', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// Start the server only after the database initialization is complete
+initializeDatabase(() => {
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
 });
