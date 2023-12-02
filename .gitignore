@@ -1,4 +1,5 @@
-Server/node_modules/
-Server/node_modules/**
+node_modules/
 Server/game.db
 
+.vscode/*
+*.log

@@ -4,6 +4,7 @@ const db = require('./db');
 const initializeWebSocket = require('./websocket');
 const playerRoutes = require('./db_players');
 const roomRoutes = require('./room');
+const path = require('path-browserify');
 const app = express();
 const port = 3001;
 
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../Game')));
 
 // use route
 app.use(playerRoutes);
