@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
 
 const app = new PIXI.Application({
-    width: 1024,  // 调整画布宽度
-    height: 600,  // 画布高度
+    resizeTo: window,
     backgroundColor: 'pink' // 背景色
 });
 
@@ -37,12 +36,28 @@ async function loadAndDisplayCards() {
         const sprite = PIXI.Sprite.from(card);
 
         // 缩放扑克牌以适应画布大小
-        const scale = 0.15; // 根据需要调整缩放比例
+        const scale = 0.15;
         sprite.scale.set(scale, scale);
 
-        // 调整扑克牌位置
-        sprite.x = 50 + index * (sprite.width * scale + 10); // 考虑缩放后的宽度
-        sprite.y = app.screen.height - sprite.height * scale - 10; // 从底部向上放置
+       // 初始扑克牌位置
+       const initialY = (app.screen.height - sprite.height * scale) / 2;
+       sprite.x = 50 + index * (sprite.width * scale + 10);
+       sprite.y = initialY;
+
+       // 添加属性来跟踪扑克牌是否被选中
+       sprite.isSelected = false;
+
+       // 为扑克牌添加点击事件
+       sprite.interactive = true;
+       sprite.buttonMode = true;
+       sprite.on('pointerdown', () => {
+           if (sprite.isSelected) {
+               sprite.y = initialY; // 如果已选中，移回原位
+           } else {
+               sprite.y -= 70; // 如果未选中，向上移动
+           }
+           sprite.isSelected = !sprite.isSelected; // 切换选中状态
+       });
 
         app.stage.addChild(sprite);
     });
