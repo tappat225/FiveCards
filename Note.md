@@ -1,7 +1,9 @@
 
 Change source for npm:
 
+```bash
 npm config set registry https://registry.npmmirror.com
+```
 
 Start server:
 
@@ -15,3 +17,9 @@ node server.js
 ## 一些坑
 
 阿里云镜像地址提供的最新Node.js v10.19.0版本对于"webpack": "^5.89.0", "webpack-cli": "^5.1.4"不支持，需要更新到v11.0.0。不过最新版早都到20以上了，直接去官网下载安装就行。
+
+GPT4对于pixi的资料似乎只到pixi5，新版的pixi7把loader方法拆分了，导致GPT4提供的代码不能用。
+
+## 参考链接
+
+[PixiJs API]: https://pixijs.download/release/docs/index.html

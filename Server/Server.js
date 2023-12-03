@@ -4,7 +4,7 @@ const db = require('./db');
 const initializeWebSocket = require('./websocket');
 const playerRoutes = require('./db_players');
 const roomRoutes = require('./room');
-const path = require('path-browserify');
+const path = require('path');
 const app = express();
 const port = 3001;
 
