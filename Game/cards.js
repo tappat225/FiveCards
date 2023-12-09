@@ -11,6 +11,8 @@ export const cards = getCardPaths();
 
 // ----------------------- Inner function ----------------------------
 
+// Set card assets path
+// TODO: compress raw-assets
 function getCardPaths() {
     const cards = [];
     for (let i = 1; i <= 13; i++) {
@@ -31,6 +33,7 @@ function setupCardEvents(sprite) {
     sprite.on('pointerdown', () => toggleCardSelection(sprite));
 }
 
+// Triggered when card is selected
 function toggleCardSelection(sprite) {
     const initialY = calculateInitialY(sprite.height);
     if (sprite.isSelected) {
@@ -83,11 +86,13 @@ export function onPlayCards() {
             const newCardSprite = PIXI.Sprite.from(newCard);
             newCardSprite.isCard = true; // 添加标识属性
             newCardSprite.scale.set(scale, scale);
+            setupCardEvents(newCardSprite);
             // 不需要设置新卡牌的位置，因为它将在arrangeCards中设置
             app.stage.addChild(newCardSprite);
 
             // 重新排列牌
             arrangeCards();
+
         });
     }
 
