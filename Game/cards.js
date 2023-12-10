@@ -1,7 +1,7 @@
 // cards.js
 import * as PIXI from 'pixi.js';
 import { scale, app } from './app.js';
-import { arrangeCards, getRandomCards } from './utils.js';
+import { getRandomCards } from './utils.js';
 
 // Container for the selected cards
 const selectedCardsSprites = [];
@@ -9,10 +9,6 @@ const selectedCardsSprites = [];
 // Set card assets path
 export const cards = getCardPaths();
 
-// ----------------------- Inner function ----------------------------
-
-// Set card assets path
-// TODO: compress raw-assets
 function getCardPaths() {
     const cards = [];
     for (let i = 1; i <= 13; i++) {
@@ -27,74 +23,79 @@ function getCardPaths() {
     return cards;
 }
 
-function setupCardEvents(sprite) {
-    sprite.interactive = true;
-    sprite.buttonMode = true;
-    sprite.on('pointerdown', () => toggleCardSelection(sprite));
-}
-
-// Triggered when card is selected
-function toggleCardSelection(sprite) {
-    const initialY = calculateInitialY(sprite.height);
-    if (sprite.isSelected) {
-        sprite.y = initialY;
-        const index = selectedCardsSprites.indexOf(sprite);
-        if (index > -1) {
-            selectedCardsSprites.splice(index, 1);
-        }
-    } else {
-        sprite.y -= 70;
-        selectedCardsSprites.push(sprite);
+export class Card extends PIXI.Sprite {
+    constructor(texturePath, index) {
+        // console.log('[Debug msg] texturePath = ', texturePath);
+        const texture = PIXI.Texture.from(texturePath);
+        super(texture);
+        this.isCard = true;
+        this.isSelected = false;
+        this.scale.set(scale, scale);
+        this.x = this.calculateInitialX(index);
+        this.y = this.calculateInitialY();
+        this.setupCardEvents();
+        app.stage.addChild(this);
     }
-    sprite.isSelected = !sprite.isSelected;
+
+    setupCardEvents() {
+        this.interactive = true;
+        this.buttonMode = true;
+        this.on('pointerdown', () => this.toggleCardSelection());
+    }
+
+    toggleCardSelection() {
+        const initialY = this.calculateInitialY();
+        if (this.isSelected) {
+            this.y = initialY;
+            const index = selectedCardsSprites.indexOf(this);
+            if (index > -1) {
+                selectedCardsSprites.splice(index, 1);
+            }
+        } else {
+            this.y -= 70;
+            selectedCardsSprites.push(this);
+        }
+        this.isSelected = !this.isSelected;
+    }
+
+    calculateInitialX(index) {
+        const totalWidth = selectedCardsSprites.length * this.width * scale +
+            (selectedCardsSprites.length - 1) * 10;
+        return (app.screen.width - totalWidth) / 2 + index * (this.width * scale + 10);
+    }
+
+    calculateInitialY() {
+        return (app.screen.height - this.height * scale) / 2;
+    }
+
 }
 
-export function calculateInitialX(index, width) {
-    const totalWidth = selectedCardsSprites.length * width * scale + (selectedCardsSprites.length - 1) * 10;
-    return (app.screen.width - totalWidth) / 2 + index * (width * scale + 10);
-}
+// Rearrange cards after each play
+function reArrangeCards() {
+    // Get sprites with label 'card'
+    const cardSprites = app.stage.children.filter(child => child.isCard);
 
-function calculateInitialY(height) {
-    return (app.screen.height - height * scale) / 2;
-}
+    // Calculate length of card group
+    const totalWidth = cardSprites.length * cardSprites[0].width * scale + (cardSprites.length - 1) * 10;
+    const initialX = (app.screen.width - totalWidth) / 2;
 
-// ------------------------------- Export function ----------------------------
-
-export function createCardSprite(card, index) {
-    // Init cards position
-    const sprite = PIXI.Sprite.from(card);
-    sprite.isCard = true;
-    sprite.scale.set(scale, scale);
-    sprite.x = calculateInitialX(index, sprite.width);
-    sprite.y = calculateInitialY(sprite.height);
-
-    setupCardEvents(sprite);
-    app.stage.addChild(sprite);
-}
-
-// Handle playing cards
-export function onPlayCards() {
-    selectedCardsSprites.forEach(cardSprite => {
-        app.stage.removeChild(cardSprite); // 从舞台上移除选中的卡牌
+    cardSprites.forEach((sprite, index) => {
+        sprite.x = initialX + index * (sprite.width * scale + 10);
+        sprite.y = (app.screen.height - sprite.height * scale) / 2;
     });
+}
 
-    // 补充新牌
-    if (app.stage.children.filter(child => child instanceof PIXI.Sprite).length < cards.length) {
-        const newCard = getRandomCards(1)[0];
-        PIXI.Assets.add({ alias: newCard, src: newCard });
-        PIXI.Assets.load(newCard).then(() => {
-            const newCardSprite = PIXI.Sprite.from(newCard);
-            newCardSprite.isCard = true; // 添加标识属性
-            newCardSprite.scale.set(scale, scale);
-            setupCardEvents(newCardSprite);
-            // 不需要设置新卡牌的位置，因为它将在arrangeCards中设置
-            app.stage.addChild(newCardSprite);
+export function onPlayCards() {
+    selectedCardsSprites.forEach(card => card.parent.removeChild(card));
 
-            // 重新排列牌
-            arrangeCards();
-
+    if (app.stage.children.filter(child => child instanceof Card).length < cards.length) {
+        const newCardPath = getRandomCards(1)[0];
+        PIXI.Assets.add({ alias: newCardPath, src: newCardPath });
+        PIXI.Assets.load(newCardPath).then(() => {
+            new Card(newCardPath, app.stage.children.length);
+            reArrangeCards();
         });
     }
 
-    selectedCardsSprites.length = 0; // 清空选中的卡牌数组
+    selectedCardsSprites.length = 0;
 }

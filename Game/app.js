@@ -1,7 +1,7 @@
 // app.js
 import * as PIXI from 'pixi.js';
-import { createCardSprite } from './cards.js';
-import { getRandomCards} from './utils.js'
+import { Card } from './cards.js';
+import { getRandomCards } from './utils.js'
 
 export const scale = 0.15;
 export const app = new PIXI.Application({
@@ -21,7 +21,7 @@ export async function loadAndDisplayCards() {
   // Load all selected cards
   await PIXI.Assets.load(selectedCards);
 
-  selectedCards.forEach((card, index) => createCardSprite(card, index));
+  selectedCards.forEach((card, index) => new Card(card, index));
 }
 
 export function displayStage() {
