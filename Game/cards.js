@@ -6,6 +6,10 @@ import { getRandomCards } from './utils.js';
 // Container for the selected cards
 const selectedCardsSprites = [];
 
+// Initial set of cards
+const initialCards = getCardPaths();
+export let availableCards = [...initialCards];
+
 // Set card assets path
 export const cards = getCardPaths();
 
@@ -35,6 +39,7 @@ export class Card extends PIXI.Sprite {
         this.y = this.calculateInitialY();
         this.setupCardEvents();
         app.stage.addChild(this);
+        this.texturePath = texturePath;
     }
 
     setupCardEvents() {
@@ -86,10 +91,16 @@ function reArrangeCards() {
 }
 
 export function onPlayCards() {
-    selectedCardsSprites.forEach(card => card.parent.removeChild(card));
+    selectedCardsSprites.forEach(card => {
+        card.parent.removeChild(card);
+        const cardIndex = availableCards.indexOf(card.texturePath); // 使用卡牌纹理路径或其他标识符找到卡牌
+        if (cardIndex > -1) {
+            availableCards.splice(cardIndex, 1); // 从可选牌组中移除
+        }
+    });
 
-    if (app.stage.children.filter(child => child instanceof Card).length < cards.length) {
-        const newCardPath = getRandomCards(1)[0];
+    if (availableCards.length > 0) {
+        const newCardPath = getRandomCards(availableCards, 1)[0];
         PIXI.Assets.add({ alias: newCardPath, src: newCardPath });
         PIXI.Assets.load(newCardPath).then(() => {
             new Card(newCardPath, app.stage.children.length);

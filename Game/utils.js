@@ -1,12 +1,11 @@
 // utils.js
-// import { app, scale } from './app.js';
-import { cards } from './cards.js'
 
 /**
- * Get n cards in random order
- * @param n number of card
+ * Get n random cards from the given array of cards
+ * @param cardsArray    array of card
+ * @param n             number of cards you want to get
  */
-export function getRandomCards(n) {
-    const shuffled = cards.sort(() => 0.5 - Math.random());
+export function getRandomCards(cardsArray, n) {
+    const shuffled = [...cardsArray].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, n);
 }

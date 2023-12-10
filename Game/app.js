@@ -1,6 +1,6 @@
 // app.js
 import * as PIXI from 'pixi.js';
-import { Card } from './cards.js';
+import { Card, availableCards } from './cards.js';
 import { getRandomCards } from './utils.js'
 
 export const scale = 0.15;
@@ -11,7 +11,7 @@ export const app = new PIXI.Application({
 
 export async function loadAndDisplayCards() {
   // Shuffle and select random cards
-  const selectedCards = getRandomCards(5);
+  const selectedCards = getRandomCards(availableCards, 5);
 
   // Add each card to the loader
   selectedCards.forEach(card => {
