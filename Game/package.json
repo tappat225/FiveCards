@@ -1,0 +1,37 @@
+{
+  "name": "fivecards",
+  "version": "0.0.1",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tappat225/FiveCards.git"
+  },
+  "scripts": {
+    "start": "",
+    "preview:only": "vite preview",
+    "preview": "tsc && vite build && vite preview",
+    "assets": "assetpack -c .assetpack.js",
+    "build": "tsc && vite build",
+    "build:full": "npm run assets && tsc && vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pixi/ui": "^0.10.1",
+    "gsap": "^3.12.4",
+    "pixi.js": "^7.3.2",
+    "sqlite3": "^5.1.6",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@assetpack/cli": "^0.8.0",
+    "@assetpack/plugin-compress": "^0.8.0",
+    "@assetpack/plugin-json": "^0.8.0",
+    "@assetpack/plugin-manifest": "^0.8.0",
+    "@assetpack/plugin-mipmap": "^0.8.0",
+    "@assetpack/plugin-texture-packer": "^0.8.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "name": "fivecards_server",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "server": "node Server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}

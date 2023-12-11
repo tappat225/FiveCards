@@ -1,4 +1,7 @@
-node_modules/
+Game/node_modules/
+Game/public/
+Game/dist/
+# Game/manifest.json
 
 .vscode/*
 *.log
