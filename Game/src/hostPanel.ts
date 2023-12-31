@@ -79,6 +79,11 @@ export class HostPanel extends Container {
             }
         });
 
+        if (selectedCards.length < 1) {
+            logOB.log("No card is selected!");
+            return;
+        }
+
         if (ruleChecker.check(selectedCards.map((card) => (card.id))) != true) {
             logOB.log("Invalid play!");
             return;
