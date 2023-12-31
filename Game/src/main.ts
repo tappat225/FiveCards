@@ -51,7 +51,9 @@ async function showGameScreen() {
     await loadBundles('game');
 
     const testview = gamescreen.hostPanel;
+    const bg = gamescreen.background;
 
+    bg.setInstance();
     testview.setUp();
 
     app.stage.addChild(gamescreen);
