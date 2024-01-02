@@ -8,6 +8,7 @@ import { GameScreen } from './screens/gameScreen';
 // Global shared
 import { configM } from './utils/configs';
 import { logOB } from './utils/logObserver';
+import { LoadingView } from './ui/loading';
 
 /** The PixiJS app Application instance, shared across the project */
 export const app = new Application<HTMLCanvasElement>({
@@ -16,7 +17,7 @@ export const app = new Application<HTMLCanvasElement>({
 });
 
 const gamescreen = new GameScreen();
-// const testview = new HostPanel(app.screen.width, app.screen.height);
+const loadingView = new LoadingView();
 
 /** Set up a resize function for the app */
 function resize()
@@ -50,6 +51,8 @@ function resize()
 async function showGameScreen() {
     await loadBundles('game');
 
+    app.stage.removeChild(loadingView);
+
     const testview = gamescreen.hostPanel;
     const bg = gamescreen.background;
 
@@ -75,6 +78,8 @@ async function Init() {
     // Trigger the first resize
     resize();
 
+    loadingView.setup(configM.appWidth, configM.appHeight);
+    app.stage.addChild(loadingView);
     // Setup assets bundles (see assets.ts) and start up loading everything in background
     await initAssets();
 

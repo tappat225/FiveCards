@@ -6,4 +6,5 @@ Game/dist/
 .vscode/*
 *.log
 *.db
+*.tar
 temp
