@@ -1,8 +1,13 @@
+# Game folder
 Game/node_modules/
 Game/public/
 Game/dist/
-# Game/manifest.json
 
+# Server folder
+Server/dist
+Server/node_modules
+
+# other files
 .vscode/*
 *.log
 *.db
