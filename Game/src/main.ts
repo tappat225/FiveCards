@@ -9,6 +9,7 @@ import { GameScreen } from './screens/gameScreen';
 import { configM } from './utils/configs';
 import { logOB } from './utils/logObserver';
 import { LoadingView } from './ui/loading';
+import { Connect } from './network/connection';
 
 /** The PixiJS app Application instance, shared across the project */
 export const app = new Application<HTMLCanvasElement>({
@@ -87,5 +88,18 @@ async function Init() {
     showGameScreen();
 }
 
-// Five Cards, Start!
-Init();
+function test() {
+    const ws_instance = new Connect();
+
+    ws_instance.setup('ws://localhost:8080');
+    ws_instance.test();
+}
+
+function main() {
+    test();
+    // Five Cards, Start!
+    Init();
+}
+
+main();
+
