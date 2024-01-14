@@ -1,28 +1,30 @@
-// server.ts
+import { WebSocketServer } from 'ws';
 
-import { UserInfo } from './user';
-import { Server } from 'ws';
+const wsServer = new WebSocketServer({ port: 8848 });
 
-const server_port: number = 8848;
+wsServer.on('connection', ws => {
+  console.log("Client connected.");
+  // 当有客户端连接时，发送"Online"状态
+  ws.send(JSON.stringify({ status: 'Online' }));
 
-// 用于生成唯一 connectId 的函数
-function generateUniqueConnectId(): string {
-    return Math.random().toString(36).slice(2, 11);
-}
+  ws.on('close', () => {
+    console.log("Client disconnected.");
+    // 可以在这里处理客户端断开连接的情况
+  });
+});
 
-function main() {
-    const server = new Server({ port: server_port });
-    const user = new UserInfo();
+// 当服务端准备关闭时
+process.on('SIGINT', () => {
+  // 向所有客户端广播"Offline"状态
+  wsServer.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ status: 'Offline' }));
+    }
+  });
 
-    server.on('connection', ws => {
-        ws.on('message', message => {
-            console.log(`Received message: ${message}`);
-        });
-
-        ws.send('Connection established');
-    });
-
-    console.log('WebSocket server started on ws://localhost:' + server_port);
-}
-
-main();
+  // 关闭 WebSocket 服务器
+  wsServer.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});

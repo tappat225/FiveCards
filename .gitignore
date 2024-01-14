@@ -1,11 +1,17 @@
-# Game folder
+# Game
 Game/node_modules/
 Game/public/
 Game/dist/
 
-# Server folder
+# Server
 Server/dist
+Server/public
 Server/node_modules
+
+# ServerManager
+ServerManager/node_modules
+ServerManager/public
+ServerManager/dist
 
 # other files
 .vscode/*
