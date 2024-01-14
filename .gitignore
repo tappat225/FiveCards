@@ -19,3 +19,4 @@ ServerManager/dist
 *.db
 *.tar
 temp
+.env
