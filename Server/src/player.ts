@@ -1,31 +1,20 @@
 // player.ts
 
-// Global shared
-// import { CardPool } from "./system/globalVal"
+import { User } from "./user";
 
 /**
  * The information of a player
  */
-export class Player {
-    public name: string;
-    public uid: string;
-    public handCards: string[];
+export class Player extends User {
+    // public name: string;
+    // public uid: string;
+    public handCards: string[] = [];
     public restCardsNum:number = 0;
     public maxCardsNum:number = 0;
 
     /** create card sprite for host player only */
-    constructor(name?: string, uid?: string) {
-        this.name = name || "undefined";
-        this.uid = uid || "null";
-        this.handCards = [];
-    }
-
-    resetName(name: string) {
-        this.name = name;
-    }
-
-    resetUid(uid: string) {
-        this.uid = uid;
+    constructor() {
+        super();
     }
 
     // initHandCards(cardsNum: number, cardPool: CardPool) {

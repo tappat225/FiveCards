@@ -1,15 +1,16 @@
 // main.js
+/// <reference types="vite/client" />
+
+// Import component
 import { Application } from 'pixi.js';
 import { initAssets, loadBundles } from './utils/assets';
-// import { HostPanel } from './hostPanel';
 import { GameScreen } from './screens/gameScreen';
-// import { Player } from './player';
+import { WSConnection } from './network/connection';
 
 // Global shared
 import { configM } from './utils/configs';
 import { logOB } from './utils/logObserver';
 import { LoadingView } from './ui/loading';
-import { Connect } from './network/connection';
 
 /** The PixiJS app Application instance, shared across the project */
 export const app = new Application<HTMLCanvasElement>({
@@ -89,9 +90,11 @@ async function Init() {
 }
 
 function test() {
-    const ws_instance = new Connect();
+    const apiAddr = import.meta.env.VITE_API_ADDR;
+    const apiPort = import.meta.env.VITE_API_WS_PORT;
+    const server_addr = `${apiAddr}:${apiPort}`;
 
-    ws_instance.setup('ws://localhost:8080');
+    const ws_instance = new WSConnection(server_addr);
     ws_instance.test();
 }
 

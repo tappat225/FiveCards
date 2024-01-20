@@ -1,20 +1,19 @@
 
-export class UserInfo {
+export class User {
     nickName: string;
     uid: string;
-    connectId: string;
-    winCount: number;
+    clientId: string;
 
-    constructor(connectId?:string) {
+    constructor(clientId?:string, uid? :string) {
         this.nickName = "undefined";
-        this.uid = "undefined";
-        this.connectId = connectId || "undefined";
-        this.winCount = 0;
-
+        this.uid = uid || "undefined";
+        this.clientId = clientId || "undefined";
     }
 
-    rebindConnId(connectId: string) {
-        this.connectId = connectId;
+    rebindClientId(clientId: string) {
+        this.clientId = clientId;
     }
+
+
 }
 

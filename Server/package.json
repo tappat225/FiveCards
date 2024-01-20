@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "server": "node dist/server.js",
-        "server:all": "tsc && node dist/server.js"
+        "server:all": "bash clean.sh && tsc && node dist/server.js"
     },
     "dependencies": {
         "@types/node": "^20.10.6",
