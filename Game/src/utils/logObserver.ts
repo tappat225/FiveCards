@@ -22,6 +22,6 @@ class LogOberser {
     }
 }
 
-export let logOB = new LogOberser();
+export const logger = new LogOberser();
 
-logOB.turnOnLog();
+logger.turnOnLog();

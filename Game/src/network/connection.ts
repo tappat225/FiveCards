@@ -1,10 +1,16 @@
 
 
 export class WSConnection {
-    private socket: WebSocket;
-    private serverAddr: string;
+    private socket: WebSocket | undefined;
+    private serverAddr: string | undefined;
 
-    constructor(address: string) {
+    /** Factory Design */
+    constructor() {
+        this.serverAddr = undefined;
+        this.socket = undefined;
+    }
+
+    connect(address: string) {
         this.serverAddr = address;
         this.socket = new WebSocket(`ws://${address}`);
     }

@@ -1,4 +1,6 @@
-// globalVal.ts
+// cardPool.ts
+
+/** Only available for single player */
 
 export enum Suit {
     Clubs = 'c',        // Clubs, 梅花

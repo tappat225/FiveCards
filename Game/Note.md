@@ -156,6 +156,8 @@ https://github.com/tappat225/FiveCards
 
 [Typescript handbook](https://www.typescriptlang.org/docs/handbook/intro.html)：typescript工具手册
 
+[PixiJS example](https://pixijs.com/examples)
+
 [PixiJs API](https://pixijs.download/release/docs/index.html)：PixiJs官方文档
 
 [@pixi/ui](https://github.com/pixijs/ui)：pixi特殊UI

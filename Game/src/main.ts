@@ -9,7 +9,7 @@ import { WSConnection } from './network/connection';
 
 // Global shared
 import { configM } from './utils/configs';
-import { logOB } from './utils/logObserver';
+import { logger } from './utils/logObserver';
 import { LoadingView } from './ui/loading';
 
 /** The PixiJS app Application instance, shared across the project */
@@ -46,7 +46,7 @@ function resize()
     configM.updateAppSize(width, height);
 
     gamescreen.resize(width, height);
-    logOB.log("resized, width: %d, height: %d", width, height);
+    logger.log("resized, width: %d, height: %d", width, height);
 }
 
 /** Just a test function */
@@ -94,7 +94,8 @@ function test() {
     const apiPort = import.meta.env.VITE_API_WS_PORT;
     const server_addr = `${apiAddr}:${apiPort}`;
 
-    const ws_instance = new WSConnection(server_addr);
+    const ws_instance = new WSConnection();
+    ws_instance.connect(server_addr);
     ws_instance.test();
 }
 

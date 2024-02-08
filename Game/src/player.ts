@@ -1,7 +1,7 @@
 // player.ts
 
 // Global shared
-import { CardPool } from "./system/globalVal"
+import { CardPool } from "./system/cardPool"
 
 /**
  * The information of a player

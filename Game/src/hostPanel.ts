@@ -1,12 +1,18 @@
+// hostPanel.ts
+
+// Class
 import { Container } from "pixi.js";
 import { PlayCardsButton } from "./ui/playCardsButton"
 import { Player } from "./player";
 import { Card } from "./card";
-import { gameCardPool } from "./system/globalVal";
-import { configM } from "./utils/configs"
-import { logOB } from "./utils/logObserver";
 import { CardsCounter } from "./ui/cardsCounter";
+
+// Global Value
+import { gameCardPool } from "./system/cardPool";
+import { configM } from "./utils/configs"
+import { logger } from "./utils/logObserver";
 import { ruleChecker } from "./system/ruleChecker";
+import { playerStatus } from "./system/status";
 
 export class HostPanel extends Container {
     public playButton: PlayCardsButton;
@@ -67,6 +73,11 @@ export class HostPanel extends Container {
 
     /** Triggered when play button is click down */
     private playCardEvent = () => {
+        if (playerStatus.getStatus() == false) {
+            logger.log("Unable to play yet.");
+            return;
+        }
+
         const selectedCards: Card[] = [];
         if (this.handCardsInstance.length < 1) {
             console.log("playerCardsIns error!");
@@ -80,12 +91,12 @@ export class HostPanel extends Container {
         });
 
         if (selectedCards.length < 1) {
-            logOB.log("No card is selected!");
+            logger.log("No card is selected!");
             return;
         }
 
         if (ruleChecker.check(selectedCards.map((card) => (card.id))) != true) {
-            logOB.log("Invalid play!");
+            logger.log("Invalid play!");
             return;
         }
 
@@ -99,13 +110,18 @@ export class HostPanel extends Container {
             this.player.removeFromHandCards(card.id);
         });
 
-        // Remove from handcards
+        if (this.player.handCards.length == 0) {
+            // You win the game
+
+        }
+
+        // Remove instance
         this.handCardsInstance = this.handCardsInstance.filter(card => !card.isSelected);
 
         // Add a new card
         const newCardID = gameCardPool.drawOneCard();
         if (newCardID == null) {
-            logOB.log("draw one card failed!");
+            logger.log("draw one card failed!");
             return;
         } 
 
@@ -139,7 +155,7 @@ export class HostPanel extends Container {
         const deckWidth: number = cardsNum * cardWidth * scale + (cardsNum - 1) * 10;
         const deckX0: number = (appWidth - deckWidth) * 0.5;
 
-        logOB.log("function[arrangeDeckPosition]:\n \
+        logger.log("function[arrangeDeckPosition]:\n \
         appWidth = %d, appHeight = %d, \n\
         deckWidth = %d, deckX0 = %d, \n\
         cardWidth = %d, cardHeight = %d" , appWidth, appHeight, deckWidth, deckX0, cardWidth, cardHeight);
@@ -170,7 +186,7 @@ export class HostPanel extends Container {
         const startX = cardWidth * 2;
         const startY = appHeight * 0.25;
 
-        logOB.log("[arrangeUsedCardsPosition]:\n\
+        logger.log("[arrangeUsedCardsPosition]:\n\
         cardWidth = %d, cardHeight = %d", cardWidth, cardHeight);
 
         this.usedCardsInstance.forEach((card, index) => {
