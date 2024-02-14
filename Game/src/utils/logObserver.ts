@@ -24,4 +24,4 @@ class LogOberser {
 
 export const logger = new LogOberser();
 
-logger.turnOnLog();
+// logger.turnOnLog();
